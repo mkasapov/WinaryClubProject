@@ -1,4 +1,19 @@
 .wi-background{
-    background-color: sienna;
+    background-color:#383d41;
     color: white;
+}
+
+body {
+    background: url(../images/taste-wine.jpg)
+    no-repeat center center fixed;
+    background-size: cover;
+}
+
+.big-btn {
+    width: 300px;
+    height: 65px;
+    font-size: 30px;
+    margin-left: 40%;
+    margin-right: 50%;
+    margin-top: 35%;
 }

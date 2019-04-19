@@ -2,7 +2,7 @@ package com.example.wineryclub.web.controllers;
 
 import org.springframework.web.servlet.ModelAndView;
 
-public class BaseController {
+public abstract class BaseController {
 
     protected ModelAndView view(String view, ModelAndView modelAndView) {
         modelAndView.setViewName(view);

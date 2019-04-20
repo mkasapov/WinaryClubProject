@@ -1,90 +1,154 @@
 package com.example.wineryclub.domain.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name="users")
-public class User extends BaseEntity {
+@Table(name = "users")
+public class User extends BaseEntity implements UserDetails {
 
-    private String firstName;
-    private String lastName;
-    private String password;
-    private int age;
-    private String country ;
-    private String town;
-    private String phoneNumber;
-    private List<Wine> favouriteWines;
+  private String fullName;
+  private String username;
+  private String password;
+  private String country;
+  private String town;
+  private int age;
+  private String email;
 
-    public User() {
-    }
-    @Column(name = "first_name")
-    public String getFirstName() {
-        return firstName;
-    }
+  private List<Wine> favoriteWines;
+  private Set<Role> authorities;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    @Column(name = "last_name")
-    public String getLastName() {
-        return lastName;
-    }
+  public User() {
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    @Column(name = "password")
-    public String getPassword() {
-        return password;
-    }
+  @Override
+  @Column(name = "username", nullable = false, unique = true, updatable = false)
+  public String getUsername() {
+    return username;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
+  @Override
+  @Column(name = "password", nullable = false)
+  public String getPassword() {
+    return password;
+  }
 
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    @Column(name = "age")
-    public int getAge() {
-        return age;
-    }
+  @Column(name = "email", nullable = false, unique = true)
+  public String getEmail() {
+    return email;
+  }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-    @Column(name = "country")
-    public String getCountry() {
-        return country;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-    @Column(name = "town")
-    public String getTown() {
-        return town;
-    }
+  @Override
+  @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+  @JoinTable(
+          name = "users_roles",
+          joinColumns = @JoinColumn(
+                  name = "user_id",
+                  referencedColumnName = "id"
+          ),
+          inverseJoinColumns = @JoinColumn(
+                  name = "role_id",
+                  referencedColumnName = "id"
+          )
+  )
+  public Set<Role> getAuthorities() {
+    return authorities;
+  }
 
-    public void setTown(String town) {
-        this.town = town;
-    }
-    @Column(name="phone_number")
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+  public void setAuthorities(Set<Role> authorities) {
+    this.authorities = authorities;
+  }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    @Column(name = "favourite_wines")
-    public List<Wine> getFavouriteWines() {
-        return favouriteWines;
-    }
+  @Column(name = "full_name", nullable = false)
+  public String getFullName() {
+    return fullName;
+  }
 
-    public void setFavouriteWines(List<Wine> favouriteWines) {
-        this.favouriteWines = favouriteWines;
-    }
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
+
+  @Column(name = "country", nullable = false)
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
+  }
+  @Column(name = "town", nullable = false)
+  public String getTown() {
+    return town;
+  }
+
+  public void setTown(String town) {
+    this.town = town;
+  }
+  @Column(name = "age", nullable = false)
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
+
+  @ManyToMany(targetEntity = Wine.class, fetch = FetchType.EAGER)
+  @JoinTable(
+          name = "users_favorite_wine",
+          joinColumns = @JoinColumn(
+                  name = "user_id",
+                  referencedColumnName = "id"
+          ),
+          inverseJoinColumns = @JoinColumn(
+                  name = "wine_id",
+                  referencedColumnName = "id"
+          )
+  )
+  public List<Wine> getFavoriteWines() {
+    return favoriteWines;
+  }
+
+  public void setFavoriteWines(List<Wine> favoriteWines) {
+    this.favoriteWines = favoriteWines;
+  }
+
+  @Override
+  @Transient
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  @Transient
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  @Transient
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  @Transient
+  public boolean isEnabled() {
+    return true;
+  }
 }
